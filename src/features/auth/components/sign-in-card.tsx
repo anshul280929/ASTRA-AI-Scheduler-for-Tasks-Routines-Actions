@@ -15,26 +15,23 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { loginSchema } from "../schema";
+import { useLogin } from "../api/use-login";
 
-const fromSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .max(256, "Password must be less than 256 characters"),
-});
+
 
 export const SignInCard = () => {
-  const form = useForm<z.infer<typeof fromSchema>>({
-    resolver: zodResolver(fromSchema),
+  const { mutate}=useLogin();  
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof fromSchema>) => {
-    console.log({values});
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    mutate({json:values});
     // Handle form submission logic here
   };
   return (
